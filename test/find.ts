@@ -17,14 +17,12 @@ Deno.test("find", async () => {
     .collection<IEvent>("events");
 
   const params = {
-    limit: 20,
-    // next: "NjNiNDllNzk4ZmI3YjNhNDVhYWEyOTE1",
-    // previous: "NjNiNDllNzk4ZmI3YjNhNDVhYWEyOTE1",
+    limit: 10,
+    // next: "NjNiNDllNzk4ZmI3YjNhNDVhYWEyOTFk",
+    // previous: "NjNiNDllNzk4ZmI3YjNhNDVhYWEyOTFl",
   };
 
   const response = await find(eventCollection, params);
-
-  // console.log({ response });
 
   assert(Array.isArray(response.results) === true);
 

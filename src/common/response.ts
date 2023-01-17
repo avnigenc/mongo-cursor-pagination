@@ -24,13 +24,14 @@ class Response<T> implements IResponse<T> {
       results = results.reverse();
     }
 
-    const [previous, next] = [results[0], results[results.length - 1]];
+    const previous = this.getPrevious(results);
+    const next = this.getNext(results);
 
     this.results = results;
     this.hasPrevious = hasPrevious;
-    this.previous = hasPrevious ? this.encode(previous) : "";
+    this.previous = this.encode(previous, hasPrevious);
     this.hasNext = hasNext;
-    this.next = hasNext ? this.encode(next) : "";
+    this.next = this.encode(next, hasNext);
   }
 
   private isHasPrevious(params: IBaseParams, hasMore: boolean): boolean {
@@ -41,15 +42,30 @@ class Response<T> implements IResponse<T> {
     return !!params.previous || hasMore;
   }
 
-  private encode(object: T): string {
-    if (!object) {
+  private encode<T>(object: T, isExists: boolean): string {
+    if (!object || !isExists) {
       return "";
     }
 
     // @ts-ignore
-    const objectId: Bson.ObjectId = object["_id"];
-    const id: string = objectId.toHexString();
-    return encode(new TextEncoder().encode(id));
+    const objectId = new Bson.ObjectId(object["_id"]).toHexString();
+    return encode(new TextEncoder().encode(objectId));
+  }
+
+  private getPrevious<T>(results: T[]): T | undefined {
+    if (!Array.isArray(results) || results.length === 0) {
+      return undefined;
+    }
+
+    return results[0];
+  }
+
+  private getNext<T>(results: T[]): T | undefined {
+    if (!Array.isArray(results) || results.length === 0) {
+      return undefined;
+    }
+
+    return results[results.length - 1];
   }
 }
 
