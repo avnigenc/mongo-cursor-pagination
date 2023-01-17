@@ -1,5 +1,9 @@
-interface Response {
-  data: string;
+interface IResponse<T> {
+  results: T[];
+  hasPrevious: boolean;
+  previous: string;
+  hasNext: boolean;
+  next: string;
 }
 
-export { type Response };
+export { type IResponse };
